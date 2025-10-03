@@ -1,0 +1,78 @@
+openapi: 3.1.0
+info:
+  title: Nevi Booking API (Mock)
+  version: 0.1.0
+servers:
+  - url: http://localhost:8000
+paths:
+  /health:
+    get:
+      responses:
+        "200":
+          description: ok
+          content:
+            application/json:
+              example: { "status": "ok" }
+  /services:
+    get:
+      responses:
+        "200":
+          description: list of services
+          content:
+            application/json:
+              example:
+                $ref: "./services.example.json"
+  /availability:
+    get:
+      parameters:
+        - in: query
+          name: service_id
+          required: true
+          schema: { type: string }
+        - in: query
+          name: staff_id
+          required: false
+          schema: { type: string }
+        - in: query
+          name: date
+          required: true
+          schema: { type: string, example: "2025-10-12" }
+      responses:
+        "200":
+          description: available slots for the date
+          content:
+            application/json:
+              example:
+                slots:
+                  [
+                    "2025-10-12T09:00:00+01:00",
+                    "2025-10-12T09:15:00+01:00",
+                    "2025-10-12T09:30:00+01:00",
+                  ]
+  /book:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer_name: { type: string }
+                email: { type: string }
+                phone: { type: string }
+                service_id: { type: string }
+                staff_id: { type: string, nullable: true }
+                start_dt: { type: string }
+      responses:
+        "200":
+          description: booking confirmed
+          content:
+            application/json:
+              example:
+                booking_id: "bkg_12345"
+                status: "confirmed"
+                start_dt: "2025-10-12T09:00:00+01:00"
+                service_id: "svc_haircut"
+                staff_id: "stf_alex"
+                ics_attachment: "BEGIN:VCALENDAR..."

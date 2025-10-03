@@ -1,0 +1,7 @@
+# root .gitignore
+node_modules
+.env*
+*.log
+.DS_Store
+app/api/__pycache__/
+ops/compose/.env.*

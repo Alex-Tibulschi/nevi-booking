@@ -1,0 +1,10 @@
+{
+  "name": "Nevi Booking",
+  "short_name": "Nevi",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0ea5e9",
+  "icons": [],
+  "start_url": "/index.html?api=http://192.168.1.171:8000"
+}

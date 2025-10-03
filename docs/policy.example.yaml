@@ -1,0 +1,5 @@
+timezone: Europe/London
+lead_time_hours: 3
+cutoff_days: 30
+slot_granularity_min: 15
+cancellation_window_hours: 24
