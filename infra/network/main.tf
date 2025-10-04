@@ -41,7 +41,7 @@ resource "aws_subnet" "subnet1" {
   }
 }
 
-output "publlic_subnet1_id" {
+output "public_subnet1_id" {
   value = aws_subnet.subnet1.id
 }
 output "public_subnet1_cidr" {
@@ -89,4 +89,45 @@ resource "aws_route" "public_default" {
 resource "aws_route_table_association" "subnet1_assoc" {
   subnet_id = aws_subnet.subnet1.id
   route_table_id = aws_route_table.public.id
+}
+
+# Private subnet
+resource "aws_subnet" "subnet2" {
+  vpc_id = aws_vpc.this.id
+  cidr_block = var.subnet2_cidr
+  availability_zone = var.subnet2_az
+
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "${local.name_prefix}-subnet2-private"
+    Project = var.project
+    Env = "dev"
+    AZ = var.subnet2_az
+    Tier = "private"
+  }
+}
+
+output "private_subnet2_id" {
+  value = aws_subnet.subnet2.id
+}
+
+# Private route table
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.this.id
+  tags = {
+    Name = "${local.name_prefix}-rt-private"
+    Project = var.project
+    Env = "dev"
+  }
+}
+
+# Private route table association with subnet2
+resource "aws_route_table_association" "subnet2_assoc" {
+  subnet_id = aws_subnet.subnet2.id
+  route_table_id = aws_route_table.private.id
+}
+
+output "private_rt_id" {
+  value = aws_route_table.private.id
 }

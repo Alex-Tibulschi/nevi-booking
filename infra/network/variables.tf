@@ -22,3 +22,11 @@ variable "subnet1_cidr" {
 variable "subnet1_az" {
   type = string
 }
+
+variable "subnet2_cidr" {
+  type = string
+}
+
+variable "subnet2_az" {
+  type = string
+}
