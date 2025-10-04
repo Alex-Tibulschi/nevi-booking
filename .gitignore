@@ -5,3 +5,20 @@ node_modules
 .DS_Store
 app/api/__pycache__/
 ops/compose/.env.*
+
+# terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*override.tf
+*override.tf.json
+.terraform.lock.hcl
+
+# env/keys
+*.tfvars
+*.auto.tfvars
+!*/envs/*.tfvars   # we keep non-secret envs files tracked if you want
+aws_credentials_backup.txt
