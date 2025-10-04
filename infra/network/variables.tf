@@ -30,3 +30,15 @@ variable "subnet2_cidr" {
 variable "subnet2_az" {
   type = string
 }
+
+# API ingress ports ONLY TO LEARN THE SETUP
+variable "api_http_ports" {
+  type = list(number)
+  default = [ 80, 443 ]
+}
+
+# Database port (PostGres)
+variable "db_port" {
+  type = number
+  default = 5432
+}
