@@ -91,7 +91,7 @@ resource "aws_route_table_association" "subnet1_assoc" {
   route_table_id = aws_route_table.public.id
 }
 
-# Private subnet
+# Private subnet 1
 resource "aws_subnet" "subnet2" {
   vpc_id = aws_vpc.this.id
   cidr_block = var.subnet2_cidr
@@ -130,6 +130,33 @@ resource "aws_route_table_association" "subnet2_assoc" {
 
 output "private_rt_id" {
   value = aws_route_table.private.id
+}
+
+# Private subnet 2
+resource "aws_subnet" "subnet3" {
+  vpc_id = aws_vpc.this.id
+  cidr_block = var.subnet3_cidr
+  availability_zone = var.subnet3_az
+
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "${local.name_prefix}-subnet3-private"
+    Project = var.project
+    Env = "dev"
+    AZ = var.subnet3_az
+    Tier = "private"
+  }
+}
+
+# Private route table association with subnet3
+resource "aws_route_table_association" "subnet3_assoc" {
+  subnet_id = aws_subnet.subnet3.id
+  route_table_id = aws_route_table.private.id
+}
+
+output "private_subnet3_id" {
+  value = aws_subnet.subnet3.id
 }
 
 # --------------SECURITY GROUPS--------------
@@ -209,3 +236,4 @@ output "sg_api_public_id" {
 output "sg_db_private_id" {
   value = aws_security_group.sg_db_private.id
 }
+
