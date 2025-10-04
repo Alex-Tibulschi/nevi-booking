@@ -14,3 +14,11 @@ variable "vpc_cidr" {
   type = string
   default = "10.20.0.0/16"
 }
+
+variable "subnet1_cidr" {
+  type = string
+}
+
+variable "subnet1_az" {
+  type = string
+}
