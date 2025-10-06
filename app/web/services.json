@@ -1,0 +1,28 @@
+{
+  "services": [
+    {
+      "id": "svc_haircut",
+      "name": "Haircut",
+      "duration_min": 30,
+      "price_cents": 2000,
+      "buffer_before_min": 0,
+      "buffer_after_min": 10
+    },
+    {
+      "id": "svc_beard",
+      "name": "Beard Trim",
+      "duration_min": 15,
+      "price_cents": 1000,
+      "buffer_before_min": 0,
+      "buffer_after_min": 5
+    },
+    {
+      "id": "svc_combo",
+      "name": "Cut + Beard",
+      "duration_min": 45,
+      "price_cents": 2800,
+      "buffer_before_min": 5,
+      "buffer_after_min": 10
+    }
+  ]
+}
