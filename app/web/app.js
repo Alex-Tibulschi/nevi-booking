@@ -5,6 +5,8 @@ async function fetchJSON(url, opts) {
   return r.json();
 }
 
+
+
 async function loadConfig() {
   try {
     // no-store so we don't get a stale config from SW/CF
@@ -24,12 +26,22 @@ function render(services) {
 // --- main ---
 async function init() {
   const cfg = await loadConfig();
-  const params = new URLSearchParams(location.search);
-  const apiOverride = params.get('api');               // e.g. ?api=http://54.171.xx.xx:8000
+  //const params = new URLSearchParams(location.search);
+  //const apiOverride = params.get('api');               // e.g. ?api=http://54.171.xx.xx:8000
   const isLocalHost = ['localhost','127.0.0.1'].includes(location.hostname);
 
   let data;
 
+  const params = new URLSearchParams(location.search);
+  const apiOverride = params.get('api');
+  const httpsOverride = apiOverride?.startsWith('https://');
+  if (httpsOverride) {
+    const base = apiOverride.replace(/\/$/, '');
+    document.getElementById('api').textContent = '(api)';
+    const data = await fetchJSON(`${base}/services`);
+    return render(data.services);
+  }
+  
   if (apiOverride && isLocalHost) {
     // Force API when on localhost and ?api= is present
     const base = apiOverride.replace(/\/$/, '');

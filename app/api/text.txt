@@ -1,0 +1,56 @@
+$AWS_REGION="eu-west-1"
+$ACCOUNT_ID = (aws sts get-caller-identity --query Account --output text)
+
+# Trust policy: allow Lambda service to assume the role
+$trust = @"
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": {"Service": "lambda.amazonaws.com"},
+    "Action": "sts:AssumeRole"
+  }]
+}
+"@
+
+# Create the role
+$roleArn = (aws iam create-role `
+  --role-name nevi-booking-api-lambda-role `
+  --assume-role-policy-document "$trust" `
+  --query Role.Arn --output text)
+
+# Basic logging so you can see errors in CloudWatch Logs
+aws iam attach-role-policy --role-name nevi-booking-api-lambda-role `
+  --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+# DynamoDB read/write policy scoped to your tables
+$services="nevi_services_dev"
+$bookings="nevi_bookings_dev"
+
+$ddbPolicy = @"
+{
+  "Version":"2012-10-17",
+  "Statement":[{
+    "Sid":"DynamoRW",
+    "Effect":"Allow",
+    "Action":[
+      "dynamodb:GetItem","dynamodb:PutItem","dynamodb:UpdateItem",
+      "dynamodb:DeleteItem","dynamodb:BatchGetItem","dynamodb:BatchWriteItem",
+      "dynamodb:Query","dynamodb:Scan","dynamodb:DescribeTable"
+    ],
+    "Resource":[
+      "arn:aws:dynamodb:${AWS_REGION}:${ACCOUNT_ID}:table/$services",
+      "arn:aws:dynamodb:${AWS_REGION}:${ACCOUNT_ID}:table/$bookings",
+      "arn:aws:dynamodb:${AWS_REGION}:${ACCOUNT_ID}:table/$services/index/*",
+      "arn:aws:dynamodb:${AWS_REGION}:${ACCOUNT_ID}:table/$bookings/index/*"
+    ]
+  }]
+}
+"@
+
+$policyArn = (aws iam create-policy `
+  --policy-name nevi-booking-ddb-rw `
+  --policy-document "$ddbPolicy" `
+  --query Policy.Arn --output text)
+
+aws iam attach-role-policy --role-name nevi-booking-api-lambda-role --policy-arn $policyArn
